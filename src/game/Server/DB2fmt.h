@@ -25,8 +25,17 @@
 #ifndef MANGOS_DB2SFRM_H
 #define MANGOS_DB2SFRM_H
 
+
 const char Itemfmt[]="niiiiiii";
 const char ItemCurrencyCostfmt[]="di";
 const char ItemExtendedCostEntryfmt[]="nxxiiiiiiiiiiiixiiiiiiiiiixxixx";
+//const char SpellReagentsEntryfmt[]="diiiiiiiiiiiiiiiixx";
+char const SceneScriptfmt[] = "nxxii";
+
+/*
+const char Itemfmt[]="niiiiiii";
+const char ItemCurrencyCostfmt[]="di";
+const char ItemExtendedCostEntryfmt[]="nxxiiiiiiiiiiiixiiiiiiiiiixxixx";
+*/
 
 #endif
