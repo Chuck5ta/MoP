@@ -1342,7 +1342,7 @@ enum Opcodes
     SMSG_WORLD_SERVER_INFO                                 = 0x0082,
     SMSG_XP_GAIN_ABORTED                                   = 0x1A2B,
     SMSG_ZONE_UNDER_ATTACK                                 = 0x10C2,
-    UNKNOWN_OPCODE                                         = NULL
+    UNKNOWN_OPCODE                                         = 0x0584   // needs to be assigned 1412 in hex 0x0584
 };
 
 // Don't forget to change this value and add opcode name to Opcodes.cpp when you add new opcode!
