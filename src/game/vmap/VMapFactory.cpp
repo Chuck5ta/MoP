@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2014  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2017  MaNGOS project <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ using namespace G3D;
 
 namespace VMAP
 {
-    void chompAndTrim(std::string& str)
+    void VMapFactory::chompAndTrim(std::string& str)
     {
         while (str.length() > 0)
         {
@@ -64,7 +64,7 @@ namespace VMAP
     //===============================================
     // result false, if no more id are found
 
-    bool getNextId(const std::string& pString, unsigned int& pStartPos, unsigned int& pId)
+    bool VMapFactory::getNextId(const std::string& pString, unsigned int& pStartPos, unsigned int& pId)
     {
         bool result = false;
         unsigned int i;
@@ -83,7 +83,7 @@ namespace VMAP
             pId = atoi(idString.c_str());
             result = true;
         }
-        return result;
+        return(result);
     }
 
     //===============================================
@@ -94,7 +94,7 @@ namespace VMAP
     void VMapFactory::preventSpellsFromBeingTestedForLoS(const char* pSpellIdString)
     {
         if (!iIgnoreSpellIds)
-            iIgnoreSpellIds = new Table<unsigned int , bool>();
+            { iIgnoreSpellIds = new Table<unsigned int , bool>(); }
         if (pSpellIdString != NULL)
         {
             unsigned int pos = 0;
@@ -112,7 +112,7 @@ namespace VMAP
 
     bool VMapFactory::checkSpellForLoS(unsigned int pSpellId)
     {
-        return !iIgnoreSpellIds->containsKey(pSpellId);
+        return(!iIgnoreSpellIds->containsKey(pSpellId));
     }
 
     //===============================================
@@ -120,7 +120,7 @@ namespace VMAP
     IVMapManager* VMapFactory::createOrGetVMapManager()
     {
         if (gVMapManager == 0)
-            gVMapManager = new VMapManager2();              // should be taken from config ... Please change if you like :-)
+            { gVMapManager = new VMapManager2(); }              // should be taken from config ... Please change if you like :-)
         return gVMapManager;
     }
 
