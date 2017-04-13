@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2017  MaNGOS project <https://getmangos.eu>
+ * Copyright (C) 2005-2014  MaNGOS project <http://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@
  * and lore are copyrighted by Blizzard Entertainment, Inc.
  */
 
-#ifndef MANGOS_H_TILEASSEMBLER
-#define MANGOS_H_TILEASSEMBLER
+#ifndef _TILEASSEMBLER_H_
+#define _TILEASSEMBLER_H_
 
 #include <G3D/Vector3.h>
 #include <G3D/Matrix3.h>
@@ -36,209 +36,88 @@
 namespace VMAP
 {
     /**
-     * @brief This Class is used to convert raw vector data into balanced BSP-Trees.
-     *
-     */
+    This Class is used to convert raw vector data into balanced BSP-Trees.
+    To start the conversion call convertWorld().
+    */
+    //===============================================
+
     class ModelPosition
     {
         private:
-            G3D::Matrix3 iRotation; /**< TODO */
+            G3D::Matrix3 iRotation;
         public:
-            G3D::Vector3 iPos; /**< TODO */
-            G3D::Vector3 iDir; /**< TODO */
-            float iScale; /**< TODO */
-            /**
-             * @brief
-             *
-             */
+            G3D::Vector3 iPos;
+            G3D::Vector3 iDir;
+            float iScale;
             void init()
             {
                 iRotation = G3D::Matrix3::fromEulerAnglesZYX(G3D::pi() * iDir.y / 180.f, G3D::pi() * iDir.x / 180.f, G3D::pi() * iDir.z / 180.f);
             }
-            /**
-             * @brief
-             *
-             * @param pIn
-             * @return G3D::Vector3
-             */
             G3D::Vector3 transform(const G3D::Vector3& pIn) const;
-            /**
-             * @brief
-             *
-             * @param pBasePos
-             */
             void moveToBasePos(const G3D::Vector3& pBasePos) { iPos -= pBasePos; }
     };
 
-    /**
-     * @brief
-     *
-     */
     typedef std::map<uint32, ModelSpawn> UniqueEntryMap;
-    /**
-     * @brief
-     *
-     */
     typedef std::multimap<uint32, uint32> TileMap;
 
-    /**
-     * @brief
-     *
-     */
     struct MapSpawns
     {
-        UniqueEntryMap UniqueEntries; /**< TODO */
-        TileMap TileEntries; /**< TODO */
+        UniqueEntryMap UniqueEntries;
+        TileMap TileEntries;
     };
 
-    /**
-     * @brief
-     *
-     */
     typedef std::map<uint32, MapSpawns*> MapData;
     //===============================================
 
-    /**
-     * @brief
-     *
-     */
     struct GroupModel_Raw
     {
-        uint32 mogpflags; /**< TODO */
-        uint32 GroupWMOID; /**< TODO */
+        uint32 mogpflags;
+        uint32 GroupWMOID;
 
-        G3D::AABox bounds; /**< TODO */
-        uint32 liquidflags; /**< TODO */
-        std::vector<MeshTriangle> triangles; /**< TODO */
-        std::vector<G3D::Vector3> vertexArray; /**< TODO */
-        class WmoLiquid* liquid; /**< TODO */
+        G3D::AABox bounds;
+        uint32 liquidflags;
+        std::vector<MeshTriangle> triangles;
+        std::vector<G3D::Vector3> vertexArray;
+        class WmoLiquid* liquid;
 
-        /**
-         * @brief
-         *
-         */
         GroupModel_Raw() : liquid(0) {}
-        /**
-         * @brief
-         *
-         */
         ~GroupModel_Raw();
 
-        /**
-         * @brief
-         *
-         * @param f
-         * @return bool
-         */
         bool Read(FILE* f);
     };
 
-    /**
-     * @brief
-     *
-     */
     struct WorldModel_Raw
     {
-        uint32 RootWMOID; /**< TODO */
-        std::vector<GroupModel_Raw> groupsArray; /**< TODO */
+        uint32 RootWMOID;
+        std::vector<GroupModel_Raw> groupsArray;
 
-        /**
-         * @brief
-         *
-         * @param path
-         * @return bool
-         */
         bool Read(const char* path);
     };
 
-    /**
-     * @brief
-     *
-     */
     class TileAssembler
     {
         private:
-            std::string iDestDir; /**< TODO */
-            std::string iSrcDir; /**< TODO */
-            /**
-             * @brief
-             *
-             * @param pName
-             * @return bool
-             */
+            std::string iDestDir;
+            std::string iSrcDir;
             bool (*iFilterMethod)(char* pName);
-            G3D::Table<std::string, unsigned int > iUniqueNameIds; /**< TODO */
-            unsigned int iCurrentUniqueNameId; /**< TODO */
-            MapData mapData; /**< TODO */
-            std::set<std::string> spawnedModelFiles; /**< TODO */
+            G3D::Table<std::string, unsigned int > iUniqueNameIds;
+            unsigned int iCurrentUniqueNameId;
+            MapData mapData;
+            std::set<std::string> spawnedModelFiles;
 
         public:
-            /**
-             * @brief
-             *
-             * @param pSrcDirName
-             * @param pDestDirName
-             */
             TileAssembler(const std::string& pSrcDirName, const std::string& pDestDirName);
-            /**
-             * @brief
-             *
-             */
             virtual ~TileAssembler();
 
-            /**
-             * @brief
-             *
-             * @return bool
-             */
             bool convertWorld2();
-            /**
-             * @brief
-             *
-             * @return bool
-             */
             bool readMapSpawns();
-            /**
-             * @brief
-             *
-             * @param spawn
-             * @return bool
-             */
             bool calculateTransformedBound(ModelSpawn& spawn);
 
-            /**
-             * @brief
-             *
-             */
             void exportGameobjectModels();
-            /**
-             * @brief
-             *
-             * @param pModelFilename
-             * @return bool
-             */
             bool convertRawFile(const std::string& pModelFilename);
-            /**
-             * @brief
-             *
-             * @param )
-             */
             void setModelNameFilterMethod(bool (*pFilterMethod)(char* pName)) { iFilterMethod = pFilterMethod; }
-            /**
-             * @brief
-             *
-             * @param pMapId
-             * @param pModPosName
-             * @return std::string
-             */
             std::string getDirEntryNameFromModName(unsigned int pMapId, const std::string& pModPosName);
-            /**
-             * @brief
-             *
-             * @param pName
-             * @return unsigned int
-             */
             unsigned int getUniqueNameId(const std::string pName);
     };
-}
-#endif
+}                                                           // VMAP
+#endif                                                      /*_TILEASSEMBLER_H_*/

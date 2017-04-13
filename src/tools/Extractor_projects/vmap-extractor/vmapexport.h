@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2017  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2014  MaNGOS project <http://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,26 +45,45 @@ enum ModelFlags
     MOD_HAS_BOUND = 1 << 2
 };
 
-extern const char* szWorkDirWmo;
-extern const char* szRawVMAPMagic;                          // vmap magic string for extracted raw vmap data
+extern const char* szWorkDirWmo; /**< TODO */
+extern const char* szRawVMAPMagic; /**< vmap magic string for extracted raw vmap data */
 
 /**
- * @brief Test if the specified file exists in the building directory
+ * @brief
  *
  * @param file
  * @return bool
  */
 bool FileExists(const char* file);
+/**
+ * @brief
+ *
+ * @param str
+ */
 void strToLower(char* str);
 
+/**
+ * @brief
+ *
+ * @param fname
+ * @return bool
+ */
 bool ExtractSingleWmo(std::string& fname);
 
-/* @param origPath = original path of the model, cleaned with fixnamen and fixname2
- * @param fixedName = will store the translated name (if changed)
- * @param failedPaths = Set to collect errors
+/**
+ * @brief
+ *
+ * @param origPath original path of the model, cleaned with fixnamen and fixname2
+ * @param fixedName will store the translated name (if changed)
+ * @param failedPaths Set to collect errors
+ * @return bool
  */
 bool ExtractSingleModel(std::string& origPath, std::string& fixedName, StringSet& failedPaths);
 
+/**
+ * @brief
+ *
+ */
 void ExtractGameobjectModels();
 
 #endif

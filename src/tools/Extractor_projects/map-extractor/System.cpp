@@ -144,8 +144,8 @@ float CONF_flat_liquid_delta_limit = 0.001f; // If max - min less this value - l
 // static char* const langs[] = {"enGB", "enUS", "deDE", "esES", "frFR", "koKR", "zhCN", "zhTW", "enCN", "enTW", "esMX", "ruRU" };
 #define LANG_COUNT 12
 
-#define MIN_SUPPORTED_BUILD 15595                           // code expect mpq files and mpq content files structure for this build or later
-#define EXPANSION_COUNT 3
+#define MIN_SUPPORTED_BUILD 18273                           // code expect mpq files and mpq content files structure for this build or later
+#define EXPANSION_COUNT 4
 #define WORLD_COUNT 2
 
 
@@ -445,8 +445,16 @@ void ReadLiquidTypeTableDBC(int const locale)
 //
 
 // Map file format data
+/* this is from m3
 static char const* MAP_MAGIC         = "MAPS";
 static char const* MAP_VERSION_MAGIC = "c1.4";
+static char const* MAP_AREA_MAGIC    = "AREA";
+static char const* MAP_HEIGHT_MAGIC  = "MHGT";
+static char const* MAP_LIQUID_MAGIC  = "MLIQ";
+*/
+
+static char const* MAP_MAGIC         = "MAPS";
+static char const* MAP_VERSION_MAGIC = "p1.3";
 static char const* MAP_AREA_MAGIC    = "AREA";
 static char const* MAP_HEIGHT_MAGIC  = "MHGT";
 static char const* MAP_LIQUID_MAGIC  = "MLIQ";
@@ -534,6 +542,7 @@ uint16 liquid_entry[ADT_CELLS_PER_GRID][ADT_CELLS_PER_GRID];
 uint8 liquid_flags[ADT_CELLS_PER_GRID][ADT_CELLS_PER_GRID];
 bool  liquid_show[ADT_GRID_SIZE][ADT_GRID_SIZE];
 float liquid_height[ADT_GRID_SIZE + 1][ADT_GRID_SIZE + 1];
+
 
 bool ConvertADT(char* filename, char* filename2, int cell_y, int cell_x, uint32 build)
 {

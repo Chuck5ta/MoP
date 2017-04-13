@@ -2,7 +2,7 @@
  * MaNGOS is a full featured server for World of Warcraft, supporting
  * the following clients: 1.12.x, 2.4.3, 3.3.5a, 4.3.4a and 5.4.8
  *
- * Copyright (C) 2005-2014  MaNGOS project <http://getmangos.eu>
+ * Copyright (C) 2005-2017  MaNGOS project <https://getmangos.eu>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 void BIH::buildHierarchy(std::vector<uint32>& tempTree, buildData& dat, BuildStats& stats)
 {
     // create space for the first node
-    tempTree.push_back(3 << 30); // dummy leaf
+    tempTree.push_back((uint32)3 << 30); // dummy leaf
     tempTree.insert(tempTree.end(), 2, 0);
     // tempTree.add(0);
 
@@ -48,18 +48,18 @@ void BIH::subdivide(int left, int right, std::vector<uint32>& tempTree, buildDat
         return;
     }
     // calculate extents
-    int axis = -1, prevAxis, rightOrig;
+    int axis = -1, rightOrig;
     float clipL = G3D::fnan(), clipR = G3D::fnan(), prevClip = G3D::fnan();
-    float split = G3D::fnan(), prevSplit;
+    float split = G3D::fnan();
     bool wasLeft = true;
     while (true)
     {
-        prevAxis = axis;
-        prevSplit = split;
+        int prevAxis = axis;
+        float prevSplit = split;
         // perform quick consistency checks
         Vector3 d(gridBox.hi - gridBox.lo);
         if (d.x < 0 || d.y < 0 || d.z < 0)
-            throw std::logic_error("negative node extents");
+            { throw std::logic_error("negative node extents"); }
         for (int i = 0; i < 3; ++i)
         {
             if (nodeBox.hi[i] < gridBox.lo[i] || nodeBox.lo[i] > gridBox.hi[i])
@@ -88,7 +88,7 @@ void BIH::subdivide(int left, int right, std::vector<uint32>& tempTree, buildDat
                 // stay left
                 ++i;
                 if (clipL < maxb)
-                    clipL = maxb;
+                    { clipL = maxb; }
             }
             else
             {
@@ -98,7 +98,7 @@ void BIH::subdivide(int left, int right, std::vector<uint32>& tempTree, buildDat
                 dat.indices[right] = t;
                 --right;
                 if (clipR > minb)
-                    clipR = minb;
+                    { clipR = minb; }
             }
             nodeL = std::min(nodeL, minb);
             nodeR = std::max(nodeR, maxb);
@@ -157,8 +157,8 @@ void BIH::subdivide(int left, int right, std::vector<uint32>& tempTree, buildDat
             if (prevAxis == axis && G3D::fuzzyEq(prevSplit, split))
             {
                 // we are stuck here - create a leaf
-                stats.updateLeaf(depth, right - left + 1);
-                createNode(tempTree, nodeIndex, left, right);
+                stats.updateLeaf(depth, rightOrig - left + 1);
+                createNode(tempTree, nodeIndex, left, rightOrig);
                 return;
             }
             right = rightOrig;
@@ -224,7 +224,7 @@ void BIH::subdivide(int left, int right, std::vector<uint32>& tempTree, buildDat
         tempTree.push_back(0);
     }
     else
-        nextIndex -= 3;
+        { nextIndex -= 3; }
     // allocate right node
     if (nr > 0)
     {
@@ -245,13 +245,13 @@ void BIH::subdivide(int left, int right, std::vector<uint32>& tempTree, buildDat
     nodeBoxR.lo[axis] = clipR;
     // recurse
     if (nl > 0)
-        subdivide(left, right, tempTree, dat, gridBoxL, nodeBoxL, nextIndex, depth + 1, stats);
+        { subdivide(left, right, tempTree, dat, gridBoxL, nodeBoxL, nextIndex, depth + 1, stats); }
     else
-        stats.updateLeaf(depth + 1, 0);
+        { stats.updateLeaf(depth + 1, 0); }
     if (nr > 0)
-        subdivide(right + 1, rightOrig, tempTree, dat, gridBoxR, nodeBoxR, nextIndex + 3, depth + 1, stats);
+        { subdivide(right + 1, rightOrig, tempTree, dat, gridBoxR, nodeBoxR, nextIndex + 3, depth + 1, stats); }
     else
-        stats.updateLeaf(depth + 1, 0);
+        { stats.updateLeaf(depth + 1, 0); }
 }
 
 bool BIH::writeToFile(FILE* wf) const
